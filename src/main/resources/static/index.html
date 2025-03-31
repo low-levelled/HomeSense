@@ -3,6 +3,26 @@
 <head>
   <meta charset="UTF-8" />
   <title>HomeSense</title>
+  <style>
+    body {
+      font-family: sans-serif;
+    }
+    #room-list li {
+      margin: 8px 0;
+      cursor: pointer;
+    }
+    .hover-box {
+      position: absolute;
+      display: none;
+      background: #fff;
+      border: 1px solid #aaa;
+      padding: 10px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      pointer-events: none;
+      z-index: 1000;
+    }
+  </style>
 </head>
 <body>
   <h1>🏠 HomeSense</h1>
@@ -19,7 +39,25 @@
     <li>Downstairs Bathroom</li>
     <li>Upstairs Bathroom</li>
     <li>Foyer</li>
-
   </ul>
+
+  <div id="hoverBox" class="hover-box">[room preview will go here]</div>
+  <script>
+    const hoverBox = document.getElementById("hoverBox");
+    const rooms = document.querySelectorAll("#room-list li");
+
+    rooms.forEach(room => {
+      room.addEventListener("mousemove", (e) => {
+        hoverBox.style.display = "block";
+        hoverBox.style.left = e.pageX + 15 + "px";
+        hoverBox.style.top = e.pageY + 15 + "px";
+      });
+
+      room.addEventListener("mouseleave", () => {
+        hoverBox.style.display = "none";
+      });
+    });
+  </script>
+
 </body>
 </html>
