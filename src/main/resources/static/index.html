@@ -25,38 +25,31 @@
   </style>
 </head>
 <body>
-  <h1>🏠 HomeSense</h1>
-  <h2>Rooms</h2>
-  <ul id="room-list">
-    <li>Living Room</li>
-    <li>Kitchen</li>
-    <li>Master Bedroom</li>
-    <li>Dining Room </li>
-    <li>Office</li>
-    <li>Loft</li>
-    <li>Music Room</li>
-    <li>Master Bathroom</li>
-    <li>Downstairs Bathroom</li>
-    <li>Upstairs Bathroom</li>
-    <li>Foyer</li>
-  </ul>
+  <h1>🏠 HomeSense Floorplan</h1>
 
-  <div id="hoverBox" class="hover-box">[room preview will go here]</div>
+  <svg width="500" height="300" style="border:1px solid #ccc;">
+    <!-- Living Room -->
+    <rect x="10" y="10" width="150" height="120" fill="#f0f0f0" stroke="#999" onclick="showRoom('Living Room')" />
+    <text x="20" y="30" fill="black">Living Room</text>
+
+    <!-- Kitchen -->
+    <rect x="170" y="10" width="150" height="120" fill="#fef3bd" stroke="#999" onclick="showRoom('Kitchen')" />
+    <text x="180" y="30" fill="black">Kitchen</text>
+
+    <!-- Bedroom -->
+    <rect x="10" y="140" width="310" height="120" fill="#d0f4de" stroke="#999" onclick="showRoom('Bedroom')" />
+    <text x="20" y="160" fill="black">Bedroom</text>
+  </svg>
+
+  <div id="popup" style="display:none; margin-top: 20px; padding: 10px; border: 1px solid #ccc; background: #fff; width: 300px;">
+    <strong id="roomName"></strong><br/>
+    <em>[Data will appear here]</em>
+  </div>
   <script>
-    const hoverBox = document.getElementById("hoverBox");
-    const rooms = document.querySelectorAll("#room-list li");
-
-    rooms.forEach(room => {
-      room.addEventListener("mousemove", (e) => {
-        hoverBox.style.display = "block";
-        hoverBox.style.left = e.pageX + 15 + "px";
-        hoverBox.style.top = e.pageY + 15 + "px";
-      });
-
-      room.addEventListener("mouseleave", () => {
-        hoverBox.style.display = "none";
-      });
-    });
+     function showRoom(roomName) {
+      document.getElementById("roomName").innerText = roomName;
+      document.getElementById("popup").style.display = "block";
+    }; 
   </script>
 
 </body>
