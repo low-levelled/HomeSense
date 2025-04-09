@@ -1,4 +1,4 @@
-package main.java.com.homesense.backend;
+package com.homesense.backend;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
