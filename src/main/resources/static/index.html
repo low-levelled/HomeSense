@@ -6,6 +6,9 @@
   <style>
     body {
       font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f0f2f5;
     }
 
     nav a {
@@ -43,6 +46,37 @@
       pointer-events: none;
       z-index: 1000;
     }
+
+    .container {
+      padding: 2rem;
+    }
+
+    form {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 10px;
+      max-width: 500px;
+      margin: 2rem auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    input {
+      display: block;
+      width: 100%;
+      padding: 0.75rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    button {
+      padding: 0.75rem 1.5rem;
+      background-color: #1e1e2f;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -52,4 +86,51 @@
       <a href="#">Dashboard</a>
       <a href="#">Sensors</a>
       <div style="display: inline-block; position: relative;">
-        <a href="#">Rooms ⌄</a>
+        <a href="#" onclick="toggleRoomList()">Rooms ⌄</a>
+        <ul id="nav-room-list">
+          <li onclick="alert('Living Room')">Living Room</li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+  <div class="container">
+    <h2>Add Appliance</h2>
+    <form id="applianceForm">
+      <input type="text" id="name" placeholder="Appliance Name" required />
+      <input type="text" id="type" placeholder="Type (e.g. fridge)" required />
+      <input type="number" id="roomId" placeholder="Room ID (e.g. 1)" required />
+      <button type="submit">Add Appliance</button>
+    </form>
+  </div>
+
+  <script>
+    function toggleRoomList() {
+      const list = document.getElementById('nav-room-list');
+      list.style.display = list.style.display === 'block' ? 'none' : 'block';
+    }
+
+    document.getElementById('applianceForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const name = document.getElementById('name').value;
+      const type = document.getElementById('type').value;
+      const roomId = parseInt(document.getElementById('roomId').value);
+
+      const response = await fetch('/inventory/appliances/add', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, type, roomId })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        alert(`Appliance added! ID: ${data.id}`);
+        document.getElementById('applianceForm').reset();
+      } else {
+        alert('Something went wrong.');
+      }
+    });
+  </script>
+</body>
+</html>
