@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Trash Can Status</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    #status {
+      font-size: 1.5em;
+      margin-top: 20px;
+    }
+    button {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🗑️ Trash Can</h1>
+  <p id="status">Loading...</p>
+  <button id="resetBtn">Trash Taken Out Now</button>
+
+  <script>
+    // Retrieve the last taken out time from localStorage or set to current time
+    let lastTakenOut = localStorage.getItem('trashLastTakenOut');
+    if (!lastTakenOut) {
+      lastTakenOut = new Date().toISOString();
+      localStorage.setItem('trashLastTakenOut', lastTakenOut);
+    }
+
+    function updateStatus() {
+      const now = new Date();
+      const lastTime = new Date(localStorage.getItem('trashLastTakenOut'));
+      const diffMs = now - lastTime;
+
+      const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diffMs / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diffMs / (1000 * 60)) % 60);
+      const seconds = Math.floor((diffMs / 1000) % 60);
+
+      document.getElementById('status').textContent =
+        `Last taken out: ${days}d ${hours}h ${minutes}m ${seconds}s ago`;
+    }
+
+    // Update the status every second
+    setInterval(updateStatus, 1000);
+    updateStatus();
+
+    // Reset the timer when the button is clicked
+    document.getElementById('resetBtn').addEventListener('click', () => {
+      const now = new Date().toISOString();
+      localStorage.setItem('trashLastTakenOut', now);
+      updateStatus();
+    });
+  </script>
+</body>
+</html>
