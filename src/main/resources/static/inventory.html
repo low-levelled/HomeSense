@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Appliance Inventory</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 2rem;
+      background-color: #f9f9f9;
+    }
+    h1 {
+      text-transform: capitalize;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-bottom: 2rem;
+    }
+    th, td {
+      padding: 0.75rem;
+      border: 1px solid #ccc;
+      text-align: left;
+    }
+    form input {
+      margin-right: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <h1 id="title">Loading...</h1>
+
+  <table id="inventory-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Quantity</th>
+        <th>Unit</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <h2>Add New Item</h2>
+  <form id="add-form">
+    <input type="text" id="name" placeholder="Name" required>
+    <input type="number" id="quantity" placeholder="Quantity" required>
+    <input type="text" id="unit" placeholder="Unit" required>
+    <button type="submit">Add</button>
+  </form>
+
+  <script>
+    const locationParam = new URLSearchParams(window.location.search).get("location");
+    const title = document.getElementById("title");
+    const tableBody = document.querySelector("#inventory-table tbody");
+    const form = document.getElementById("add-form");
+
+    title.textContent = `${locationParam} Inventory`;
+
+    function loadInventory() {
+      fetch(`/inventory/location/${locationParam}`)
+        .then(res => res.json())
+        .then(items => {
+          tableBody.innerHTML = "";
+          items.forEach(item => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+              <td>${item.name}</td>
+              <td>${item.quantity}</td>
+              <td>${item.unit}</td>
+            `;
+            tableBody.appendChild(row);
+          });
+        });
+    }
+
+    form.addEventListener("submit", e => {
+      e.preventDefault();
+      const data = {
+        name: document.getElementById("name").value,
+        quantity: parseInt(document.getElementById("quantity").value),
+        unit: document.getElementById("unit").value,
+        location: locationParam
+      };
+
+      fetch("/inventory/add", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      }).then(() => {
+        form.reset();
+        loadInventory();
+      });
+    });
+
+    loadInventory();
+  </script>
+</body>
+</html>
